@@ -1,17 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NavBar from '../NavBar/NavBar.component';
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+    const [loading, setLoading] = useState(false);
     const handleSubmit = (e: any) => {
         e.preventDefault();
         console.log(email, password);
     }
+    useEffect(()=>{
+        setLoading(true);
+    },[])
     return (
         <>
             <NavBar />
-            <div className='flex justify-center items-center h-[80vh]'>
+            <div className={`${loading ? 'opacity-100 transition-opacity duration-[1500ms]' : 'opacity-0'} flex justify-center items-center h-[80vh] `}>
                 <div className='bg-mine-shaft p-6 rounded-lg shadow-md'>
                     <h1 className='text-center text-3xl font-bold'>Sign In</h1>
                     <form className='flex flex-col space-y-4' onSubmit={handleSubmit}>
@@ -35,7 +38,10 @@ const SignIn = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <button type='submit' className='bg-mine-shaft text-white p-2 rounded-md'>Sign In</button>
+                        <button 
+                        type='submit' 
+                        className='bg-mine-shaft border-2 border-white text-white p-2 rounded-md transition-colors hover:bg-white hover:text-mine-shaft active:bg-boulder active:text-scorpion'
+                        >Sign In</button>
                     </form>
                     {/* Add your sign-in form or content here */}
                 </div>

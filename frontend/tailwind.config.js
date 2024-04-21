@@ -6,7 +6,7 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
+      colors: { // Color palette
         "royal-blue": "#5376e5",
         "mine-shaft": "#2e2e2e",
         "grayprop":   "#909090",
