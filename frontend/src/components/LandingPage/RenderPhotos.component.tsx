@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import GetPhoto200x300 from '../Apis/GetPhoto.api';
+import GetPhoto200x300 from '../Apis/LandingPage.api';
 import { LandingPage } from './LandingPage.component';
 export default function RenderPhotos() {
     const [photos, setPhotos] = useState<{ photo1: string, photo2: string }>({ photo1: '', photo2: '' });
@@ -32,7 +32,7 @@ export default function RenderPhotos() {
             //Get a new request if there are no cached images
             const cachedImageUrls = localStorage.getItem('cachedImageUrls');
             if (cachedImageUrls && cachedImageUrls !== "{}") {
-                if(localStorage.getItem('NumberOfReloads') === '3'){
+                if(localStorage.getItem('NumberOfReloads') === '2'){
                     localStorage.removeItem('cachedImageUrls');
                     localStorage.removeItem('NumberOfReloads');
                     return await fetchImageUrls();

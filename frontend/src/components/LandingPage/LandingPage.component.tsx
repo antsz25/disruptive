@@ -1,10 +1,15 @@
 import {useEffect, useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 import './../../../src/style.css';
 import Navbar from '../NavBar/NavBar.component';
 export function LandingPage({data}:{data: {photo1: string, photo2: string}}){
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
     useEffect(() => {
         setLoading(true);
+        if(localStorage.getItem('token') !== null){
+            navigate('/home');
+        }
     }, []);
     return (
         <>

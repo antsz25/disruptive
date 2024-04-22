@@ -1,31 +1,48 @@
 import { useEffect, useState } from 'react';
-import NavBar from '../NavBar/NavBar.component';
+import NavBar from '../../NavBar/NavBar.component';
+import { LoginUser } from '../../Apis/User.api';
+import { useNavigate } from 'react-router-dom';
 const SignIn = () => {
-    const [email, setEmail] = useState('');
+    const [data, setData] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const handleSubmit = (e: any) => {
-        e.preventDefault();
-        console.log(email, password);
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+    const handleSubmit = async (e:any) => {
+        try{
+            e.preventDefault();
+            const resp:any = await LoginUser({data: data, password: password});
+            if(resp.error){
+                setError(resp.error);
+                return;
+            }
+            localStorage.setItem('token', resp.headers.get('Authorization'));
+            navigate('/home');
+        }catch(err : any){
+            setError(err);
+        }
     }
     useEffect(()=>{
         setLoading(true);
+        if(localStorage.getItem('token') !== null){
+            navigate('/home');
+        }
     },[])
     return (
         <>
             <NavBar />
             <div className={`${loading ? 'opacity-100 transition-opacity duration-[1500ms]' : 'opacity-0'} flex justify-center items-center h-[80vh] `}>
-                <div className='bg-mine-shaft p-6 rounded-lg shadow-md'>
+                <div className='bg-mine-shaft p-6 rounded-lg shadow-md min-h-[350px]'>
                     <h1 className='text-center text-3xl font-bold'>Sign In</h1>
                     <form className='flex flex-col space-y-4' onSubmit={handleSubmit}>
                         <div>
-                            <label htmlFor='email' className='text-lg'>Email</label>
+                            <label htmlFor='data' className='text-lg'>Email or Username</label>
                             <input 
-                            type='email' 
-                            id='email' 
-                            className='w-full p-2 border-2 border-mine-shaft rounded-md' 
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            type='text' 
+                            id='data' 
+                            className='w-full p-2 border-2 text-tundora border-mine-shaft rounded-md' 
+                            value={data}
+                            onChange={(e) => setData(e.target.value)}
                             />
                         </div>
                         <div>
@@ -33,7 +50,7 @@ const SignIn = () => {
                             <input 
                             type='password' 
                             id='password' 
-                            className='w-full p-2 border-2 border-mine-shaft rounded-md' 
+                            className='w-full p-2 border-2 text-tundora border-mine-shaft rounded-md' 
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             />
@@ -42,8 +59,8 @@ const SignIn = () => {
                         type='submit' 
                         className='bg-mine-shaft border-2 border-white text-white p-2 rounded-md transition-colors hover:bg-white hover:text-mine-shaft active:bg-boulder active:text-scorpion'
                         >Sign In</button>
+                        {error && <p className='text-red-500 text-lg text-center'>{error}</p>}
                     </form>
-                    {/* Add your sign-in form or content here */}
                 </div>
             </div>
         </>

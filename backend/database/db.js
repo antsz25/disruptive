@@ -1,14 +1,23 @@
 const { MongoClient, ObjectId } = require('mongodb');
 require('dotenv').config();
-const _url = process.env.DATABASE_URL;
-const _dbName = process.env.DATABASE_NAME;
-
+const DATABASE_USER = process.env.DATABASE_USER;
+const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD;
+const DATABASE_NAME = process.env.DATABASE_NAME;
+const _url = `mongodb+srv://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_NAME}.7rlga4b.mongodb.net/?retryWrites=true&w=majority&appName=${DATABASE_NAME}`;
 const connection = new MongoClient(_url);
-const dbcon = connection.db(_dbName, {useUnifiedTopology: true});
+const dbcon = connection.db(DATABASE_NAME, {useUnifiedTopology: true});
 
 //UserLogic Functions
 async function createUser(data){
     const result = await dbcon.collection('users').insertOne(data);
+    return result;
+}
+async function LogoutUsuario(token){
+    const result = await dbcon.collection('sessions').deleteOne({token});
+    return result;
+}
+async function LoginUsuario(data){
+    const result = await dbcon.collection('sessions').insertOne(data);
     return result;
 }
 async function getUsers(){
@@ -31,22 +40,61 @@ async function UpdateUserByUsername(username, data){
     const result = await dbcon.collection('users').updateOne({username}, { $set: data });
     return result;
 }
-async function deleteUserByEmail(email){
-    const result = await dbcon.collection('users').deleteOne({email});
-    return result;
-}
 async function deleteUserByUsername(username){
     const result = await dbcon.collection('users').deleteOne({username});
     return result;
 }
+async function getMe(token){
+    const result = await getUserByUsername(token);
+    return result;
+}
+//ContentLogic Functions
+async function createContent(data){
+    const result = await dbcon.collection('content').insertOne(data);
+    return result;
+}
+async function getContents(){
+    const result = await dbcon.collection('content').find().sort({createdAt: -1}).toArray();
+    return result;
+}
+async function getContentById(id){
+    const result = await dbcon.collection('content').findOne({_id: ObjectId(id)});
+    return result;
+}
+async function getContentsByTopic(topic){
+    const result = await dbcon.collection('content').find({topic: topic}).sort({createdAt: -1}).toArray();
+    return result;
+}
+async function getContentsByUsername(username){
+    const result = await dbcon.collection('content').find({author: username}).sort({createdAt: -1}).toArray();
+    return result;
+}
+async function updateContentById(id, data){
+    const result = await dbcon.collection('content').updateOne({_id: ObjectId(id)},{ $set: data });
+    return result;
+}
+async function deleteContentById(id){
+    const result = await dbcon.collection('content').deleteOne({_id: ObjectId(id)});
+    return result;
+}
+
 
 module.exports = {
     createUser,
+    LoginUsuario,
     getUsers,
     getUserByEmail,
     getUserByUsername,
     UpdateUserByEmail,
     UpdateUserByUsername,
-    deleteUserByEmail,
-    deleteUserByUsername
+    deleteUserByUsername,
+    LogoutUsuario,
+    getMe,
+    createContent,
+    getContents,
+    getContentById,
+    getContentsByTopic,
+    getContentsByUsername,
+    updateContentById,
+    deleteContentById
 }
