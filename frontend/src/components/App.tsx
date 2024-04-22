@@ -6,6 +6,7 @@ import RenderPhotos from './LandingPage/RenderPhotos.component';
 import Home from './Home/Home.component';
 import LogOut from './NavBarOptions/WithSession/LogOut.component';
 import ProfileMain from './NavBarOptions/WithSession/Profile/ProfileMain.component';
+import AdminHome from './Admin/adminHome.component';
 import './../../src/style.css';
 
 export default function App(){
@@ -18,6 +19,7 @@ export default function App(){
         }}>
             <Router>
                 <Routes>
+                    <Route path='/admin' element = {<AdminHome />} />
                     <Route path="/" element={<RenderPhotos />} />
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/signup" element={<SignUp />} />

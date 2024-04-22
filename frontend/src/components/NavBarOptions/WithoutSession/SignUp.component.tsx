@@ -69,6 +69,7 @@ const SignUp = () => {
     };
     useEffect(() => {
         setLoading(true);
+        setSuccess(true);
         if(localStorage.getItem('token') !== null){
             navigate('/home');
         }

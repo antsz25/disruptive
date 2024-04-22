@@ -18,6 +18,7 @@ app.use(express.json());
 
 app.use('/users', require('./routers/user.router'));
 app.use('/contents', require('./routers/content.router'));
+app.use('/topics', require('./routers/topic.router'));
 
 server.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);  

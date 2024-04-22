@@ -1,10 +1,10 @@
 import Navbar from "../../../NavBar/NavBar.component";
 import { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import ContentUploaded from "./contentUploaded.component";
 import Profile from "./Profile.component";
 import { getMe } from '../../../Apis/User.api';
-
+import AdminPanel from "./editContent.component";
 interface User{
     email: string;
     username: string;
@@ -38,6 +38,14 @@ const ProfileMain = () =>{
         fetchMe();
         setLoading(true);
     },[]);
+    if(user.role === 'admin'){
+        return (
+            <>
+            <Navbar />
+            <AdminPanel />
+            </>
+        )
+    }
     return (
         <>
             <Navbar />

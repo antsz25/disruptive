@@ -36,6 +36,7 @@ const LoginUsuario = async (req, res) => {
             return null;
         }
         let user = await CheckForUser(req); // Retrieve user from database
+        console.log("blob");
         if(!user){
             return res.status(404).send('User not found');
         }

@@ -6,7 +6,6 @@ const DATABASE_NAME = process.env.DATABASE_NAME;
 const _url = `mongodb+srv://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_NAME}.7rlga4b.mongodb.net/?retryWrites=true&w=majority&appName=${DATABASE_NAME}`;
 const connection = new MongoClient(_url);
 const dbcon = connection.db(DATABASE_NAME, {useUnifiedTopology: true});
-
 //UserLogic Functions
 async function createUser(data){
     const result = await dbcon.collection('users').insertOne(data);
@@ -77,7 +76,25 @@ async function deleteContentById(id){
     const result = await dbcon.collection('content').deleteOne({_id: ObjectId(id)});
     return result;
 }
-
+//Topic Logic Functions
+async function createTopic(data){
+    const result = await dbcon.collection('topics').insertOne(data);
+    return result;
+}
+async function deleteTopic(name){
+    const result = await dbcon.collection('topics').deleteOne({name});
+    return result;
+}
+async function getTopics(){
+    const result = await dbcon.collection('topics').find().toArray();
+    return result;
+}
+async function getTopicByName(name){
+    const result = await dbcon.collection('topics').findOne({
+        name: name
+    });
+    return result;
+}
 
 module.exports = {
     createUser,
@@ -96,5 +113,9 @@ module.exports = {
     getContentsByTopic,
     getContentsByUsername,
     updateContentById,
-    deleteContentById
+    deleteContentById,
+    createTopic,
+    deleteTopic,
+    getTopics,
+    getTopicByName
 }
